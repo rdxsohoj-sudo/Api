@@ -6,7 +6,7 @@
     <title>API Core Gateway - @RDXallhacknew</title>
 </head>
 <body>
-    <pre id="json-output">Initializing Core System...</pre>
+    <pre id="json-output">Initializing Core System by @RDXallhacknew...</pre>
 
     <script>
         // Developer Credit: @RDXallhacknew
@@ -15,76 +15,81 @@
         const outputElement = document.getElementById('json-output');
 
         if (!mobile) {
-            const errorResponse = {
+            outputElement.textContent = JSON.stringify({
                 "status": "error",
                 "message": "Please enter a mobile number. Example: ?mobile=6204458125",
                 "developer": "@RDXallhacknew"
-            };
-            outputElement.textContent = JSON.stringify(errorResponse, null, 4);
+            }, null, 4);
         } else {
             const targetUrl = `https://number-aadvance-info-noobster.com-dashbord63hh7qe4.workers.dev/?key=demo&mobile=${encodeURIComponent(mobile)}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+            
+            // Backup Proxy Network (CORS Bypass Engine)
+            const proxy1 = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+            const proxy2 = `https://cors-anywhere.herokuapp.com/${targetUrl}`;
 
-            fetch(proxyUrl)
-                .then(response => {
-                    if (response.ok) return response.json();
-                    throw new Error('Gateway Connection Failed');
-                })
-                .then(proxyData => {
-                    let rawContent = proxyData.contents;
+            // ডেটা ফিল্টারিং এবং প্রিন্ট করার মেইন ফাংশন
+            function processResponse(rawContent) {
+                // 🚫 সোর্সের সমস্ত ক্রেডিট ও লিংক ভ্যানিশ করার ফিল্টার
+                rawContent = rawContent.replace(/https:\/\/t\.me\/[a-zA-Z0-9_]+/gi, "");
+                rawContent = rawContent.replace(/t\.me\/[a-zA-Z0-9_]+/gi, "");
+                rawContent = rawContent.replace(/@noob11001/gi, "");
+                rawContent = rawContent.replace(/noob11001/gi, "");
+                rawContent = rawContent.replace(/noobster/gi, "");
+                rawContent = rawContent.replace(/Noobster/gi, "");
 
-                    // 🚫 ১০০% গ্যারান্টিড ফিল্টার: সোর্সের সমস্ত ক্রেডিট ও লিংক মুছে ফেলার ম্যাজিক
-                    // ১. সমস্ত টেলিগ্রাম লিংক (t.me/...) সম্পূর্ণ মুছে ফেলা হচ্ছে
-                    rawContent = rawContent.replace(/https:\/\/t\.me\/[a-zA-Z0-9_]+/gi, "");
-                    rawContent = rawContent.replace(/t\.me\/[a-zA-Z0-9_]+/gi, "");
-                    
-                    // ২. সোর্স ডেভেলপারের ইউজারনেম এবং ব্র্যান্ড নাম সম্পূর্ণ ভ্যানিশ
-                    rawContent = rawContent.replace(/@noob11001/gi, "");
-                    rawContent = rawContent.replace(/noob11001/gi, "");
-                    rawContent = rawContent.replace(/noobster/gi, "");
-                    rawContent = rawContent.replace(/Noobster/gi, "");
-                    
-                    // ৩. কোনো অবশিষ্টাংশ বা ভাঙা লিংক থাকলে তাও পরিষ্কার করা
-                    rawContent = rawContent.replace(/https?:\/\/[^\s]+telegram[^\s]+/gi, "");
-
-                    // ফিল্টার করা ডেটাকে পরিষ্কার JSON অবজেক্টে রূপান্তর
-                    let cleanedData;
-                    try {
-                        cleanedData = JSON.parse(rawContent);
-                        
-                        // যদি JSON-এর ভেতরের কী (Key) বা ভ্যালুতেও ওদের নাম থাকে, তা ডিলিট করার ফাংশন
-                        const deepClean = (obj) => {
-                            for (let key in obj) {
-                                if (typeof obj[key] === 'string') {
-                                    obj[key] = obj[key].replace(/@noob11001|noob11001|noobster|t\.me\/[a-zA-Z0-9_]+/gi, "").trim();
-                                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                                    deepClean(obj[key]);
-                                }
+                let cleanedData;
+                try {
+                    cleanedData = JSON.parse(rawContent);
+                    const deepClean = (obj) => {
+                        for (let key in obj) {
+                            if (typeof obj[key] === 'string') {
+                                obj[key] = obj[key].replace(/@noob11001|noob11001|noobster|t\.me\/[a-zA-Z0-9_]+/gi, "").trim();
+                            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                deepClean(obj[key]);
                             }
-                        };
-                        deepClean(cleanedData);
-                    } catch(e) {
-                        cleanedData = { "data": rawContent.trim() };
-                    }
-
-                    // 👑 শুধুমাত্র আপনার ক্রেডিটসহ ফাইনাল ১০০% পিওর আউটপুট
-                    const finalOutput = {
-                        "status": "success",
-                        "developer": "@RDXallhacknew",
-                        "branding": "RDX SHADOW AUTOMATION SYSTEMS",
-                        "search_result": cleanedData
+                        }
                     };
+                    deepClean(cleanedData);
+                } catch(e) {
+                    cleanedData = { "info": rawContent.trim() };
+                }
 
-                    outputElement.textContent = JSON.stringify(finalOutput, null, 4);
+                // 👑 শুধুমাত্র আপনার ক্রেডিটসহ ফাইনাল আউটপুট
+                const finalOutput = {
+                    "status": "success",
+                    "developer": "@RDXallhacknew",
+                    "branding": "RDX SHADOW AUTOMATION SYSTEMS",
+                    "search_result": cleanedData
+                };
+                outputElement.textContent = JSON.stringify(finalOutput, null, 4);
+            }
+
+            // প্রথম প্রক্সি দিয়ে চেষ্টা
+            fetch(proxy1)
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json();
                 })
-                .catch(error => {
-                    const failedOutput = {
-                        "status": "failed",
-                        "developer": "@RDXallhacknew",
-                        "message": "Security firewall blocked the request or source offline.",
-                        "error_log": error.message
-                    };
-                    outputElement.textContent = JSON.stringify(failedOutput, null, 4);
+                .then(data => {
+                    if(data && data.contents) {
+                        processResponse(data.contents);
+                    } else {
+                        throw new Error();
+                    }
+                })
+                .catch(() => {
+                    // প্রথম প্রক্সি ফেইল করলে ব্যাকআপ প্রক্সি ট্রাই করবে
+                    fetch(targetUrl, { method: 'GET', mode: 'cors' })
+                        .then(res => res.text())
+                        .then(text => processResponse(text))
+                        .catch(err => {
+                            outputElement.textContent = JSON.stringify({
+                                "status": "failed",
+                                "developer": "@RDXallhacknew",
+                                "message": "Network bypass failed. Please refresh or check connection.",
+                                "error_log": err.message
+                            }, null, 4);
+                        });
                 });
         }
     </script>
