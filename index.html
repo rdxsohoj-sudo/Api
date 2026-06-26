@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Number Info API - @RDXallhacknew</title>
+    <title>API Core Gateway - @RDXallhacknew</title>
 </head>
 <body>
-    <pre id="json-output">Loading API Core System...</pre>
+    <pre id="json-output">Initializing Core System...</pre>
 
     <script>
         // Developer Credit: @RDXallhacknew
@@ -17,65 +17,72 @@
         if (!mobile) {
             const errorResponse = {
                 "status": "error",
-                "error_code": 400,
-                "message": "Please enter a valid mobile number in the URL parameter. Example: ?mobile=6204458125",
-                "developer_credits": {
-                    "owner": "@RDXallhacknew",
-                    "branding": "RDX SHADOW AUTOMATION"
-                }
+                "message": "Please enter a mobile number. Example: ?mobile=6204458125",
+                "developer": "@RDXallhacknew"
             };
             outputElement.textContent = JSON.stringify(errorResponse, null, 4);
         } else {
-            // Target API URL
             const targetUrl = `https://number-aadvance-info-noobster.com-dashbord63hh7qe4.workers.dev/?key=demo&mobile=${encodeURIComponent(mobile)}`;
-            
-            // CORS Bypass Proxy Gateway URL
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
             fetch(proxyUrl)
                 .then(response => {
                     if (response.ok) return response.json();
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Gateway Connection Failed');
                 })
                 .then(proxyData => {
-                    // সোর্স থেকে আসা র ডেটা
                     let rawContent = proxyData.contents;
-                    
-                    // 🚫 সোর্স এপিআই-এর ভেতরের সমস্ত টেলিগ্রাম লিংক এবং ক্রেডিট রিমুভ করার জাদুকরী ফিল্টার
-                    rawContent = rawContent.replace(/https:\/\/t\.me\/[a-zA-Z0-9_]+/g, "[REMOVED]");
-                    rawContent = rawContent.replace(/@noob11001/gi, "");
-                    rawContent = rawContent.replace(/noobster/gi, "");
 
-                    // ফিল্টার করা ডেটাকে JSON এ রূপান্তর
-                    let realData;
-                    try {
-                        realData = JSON.parse(rawContent);
-                    } catch(e) {
-                        realData = {"info": rawContent};
-                    }
+                    // 🚫 ১০০% গ্যারান্টিড ফিল্টার: সোর্সের সমস্ত ক্রেডিট ও লিংক মুছে ফেলার ম্যাজিক
+                    // ১. সমস্ত টেলিগ্রাম লিংক (t.me/...) সম্পূর্ণ মুছে ফেলা হচ্ছে
+                    rawContent = rawContent.replace(/https:\/\/t\.me\/[a-zA-Z0-9_]+/gi, "");
+                    rawContent = rawContent.replace(/t\.me\/[a-zA-Z0-9_]+/gi, "");
                     
-                    // আপনার নিজস্ব ব্র্যান্ডিং সহ ফাইনাল আউটপুট
+                    // ২. সোর্স ডেভেলপারের ইউজারনেম এবং ব্র্যান্ড নাম সম্পূর্ণ ভ্যানিশ
+                    rawContent = rawContent.replace(/@noob11001/gi, "");
+                    rawContent = rawContent.replace(/noob11001/gi, "");
+                    rawContent = rawContent.replace(/noobster/gi, "");
+                    rawContent = rawContent.replace(/Noobster/gi, "");
+                    
+                    // ৩. কোনো অবশিষ্টাংশ বা ভাঙা লিংক থাকলে তাও পরিষ্কার করা
+                    rawContent = rawContent.replace(/https?:\/\/[^\s]+telegram[^\s]+/gi, "");
+
+                    // ফিল্টার করা ডেটাকে পরিষ্কার JSON অবজেক্টে রূপান্তর
+                    let cleanedData;
+                    try {
+                        cleanedData = JSON.parse(rawContent);
+                        
+                        // যদি JSON-এর ভেতরের কী (Key) বা ভ্যালুতেও ওদের নাম থাকে, তা ডিলিট করার ফাংশন
+                        const deepClean = (obj) => {
+                            for (let key in obj) {
+                                if (typeof obj[key] === 'string') {
+                                    obj[key] = obj[key].replace(/@noob11001|noob11001|noobster|t\.me\/[a-zA-Z0-9_]+/gi, "").trim();
+                                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                    deepClean(obj[key]);
+                                }
+                            }
+                        };
+                        deepClean(cleanedData);
+                    } catch(e) {
+                        cleanedData = { "data": rawContent.trim() };
+                    }
+
+                    // 👑 শুধুমাত্র আপনার ক্রেডিটসহ ফাইনাল ১০০% পিওর আউটপুট
                     const finalOutput = {
-                        "api_status": "success",
-                        "developer_info": {
-                            "developer": "@RDXallhacknew",
-                            "branding": "RDX SHADOW AUTOMATION",
-                            "authorized": true,
-                            "rights": "All Rights Reserved to @RDXallhacknew"
-                        },
-                        "search_parameters": {
-                            "query_mobile": mobile
-                        },
-                        "real_information": realData
+                        "status": "success",
+                        "developer": "@RDXallhacknew",
+                        "branding": "RDX SHADOW AUTOMATION SYSTEMS",
+                        "search_result": cleanedData
                     };
+
                     outputElement.textContent = JSON.stringify(finalOutput, null, 4);
                 })
                 .catch(error => {
                     const failedOutput = {
-                        "api_status": "failed",
+                        "status": "failed",
                         "developer": "@RDXallhacknew",
-                        "message": "Unable to fetch data from the secure gateway. Please try again.",
-                        "error_details": error.message
+                        "message": "Security firewall blocked the request or source offline.",
+                        "error_log": error.message
                     };
                     outputElement.textContent = JSON.stringify(failedOutput, null, 4);
                 });
