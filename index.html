@@ -29,7 +29,7 @@
             // Target API URL
             const targetUrl = `https://number-aadvance-info-noobster.com-dashbord63hh7qe4.workers.dev/?key=demo&mobile=${encodeURIComponent(mobile)}`;
             
-            // CORS Bypass Proxy Gateway URL (Bypassing GitHub restrictions)
+            // CORS Bypass Proxy Gateway URL
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
             fetch(proxyUrl)
@@ -38,9 +38,23 @@
                     throw new Error('Network response was not ok.');
                 })
                 .then(proxyData => {
-                    // AllOrigins standard dynamic parser
-                    const realData = JSON.parse(proxyData.contents);
+                    // সোর্স থেকে আসা র ডেটা
+                    let rawContent = proxyData.contents;
                     
+                    // 🚫 সোর্স এপিআই-এর ভেতরের সমস্ত টেলিগ্রাম লিংক এবং ক্রেডিট রিমুভ করার জাদুকরী ফিল্টার
+                    rawContent = rawContent.replace(/https:\/\/t\.me\/[a-zA-Z0-9_]+/g, "[REMOVED]");
+                    rawContent = rawContent.replace(/@noob11001/gi, "");
+                    rawContent = rawContent.replace(/noobster/gi, "");
+
+                    // ফিল্টার করা ডেটাকে JSON এ রূপান্তর
+                    let realData;
+                    try {
+                        realData = JSON.parse(rawContent);
+                    } catch(e) {
+                        realData = {"info": rawContent};
+                    }
+                    
+                    // আপনার নিজস্ব ব্র্যান্ডিং সহ ফাইনাল আউটপুট
                     const finalOutput = {
                         "api_status": "success",
                         "developer_info": {
