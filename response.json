@@ -1,0 +1,16 @@
+{
+  "project_meta": {
+    "api_name": "Advanced Number Information Router",
+    "core_version": "2.5.0-premium",
+    "build_status": "100% Stable"
+  },
+  "developer_branding_credits": {
+    "lead_developer": "@RDXallhacknew",
+    "project_owner": "@RDXallhacknew",
+    "system_signature": "RDX-SHADOW-AUTOMATION-SYSTEMS"
+  },
+  "endpoint_configuration": {
+    "request_method": "GET",
+    "response_format": "JSON Application"
+  }
+}

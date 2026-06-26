@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Number Info API - @RDXallhacknew</title>
+</head>
+<body>
+    <pre id="json-output">Loading API Core...</pre>
+
+    <script>
+        // Developer Credit: @RDXallhacknew
+        // URL থেকে মোবাইল নম্বর খুঁজে নেওয়া (যেমন: ?mobile=6204458125)
+        const urlParams = new URLSearchParams(window.location.search);
+        const mobile = urlParams.get('mobile');
+
+        const outputElement = document.getElementById('json-output');
+
+        if (!mobile) {
+            const errorResponse = {
+                "status": "error",
+                "error_code": 400,
+                "message": "Please enter a valid mobile number in the URL parameter. Example: ?mobile=1234567890",
+                "developer_credits": {
+                    "owner": "@RDXallhacknew",
+                    "branding": "RDX SHADOW AUTOMATION"
+                }
+            };
+            outputElement.textContent = JSON.stringify(errorResponse, null, 4);
+        } else {
+            // আসল API URL
+            const targetUrl = `https://number-aadvance-info-noobster.com-dashbord63hh7qe4.workers.dev/?key=demo&mobile=${encodeURIComponent(mobile)}`;
+
+            // আসল API থেকে ডেটা ফেচ করা
+            fetch(targetUrl)
+                .then(response => response.json())
+                .then(realData => {
+                    // আপনার ক্রেডিটসহ ফাইনাল আউটপুট তৈরি
+                    const finalOutput = {
+                        "api_status": "success",
+                        "developer_info": {
+                            "developer": "@RDXallhacknew",
+                            "branding": "RDX SHADOW AUTOMATION",
+                            "authorized": true
+                        },
+                        "search_parameters": {
+                            "query_mobile": mobile
+                        },
+                        "real_information": realData
+                    };
+                    outputElement.textContent = JSON.stringify(finalOutput, null, 4);
+                })
+                .catch(error => {
+                    // যদি কোনো সমস্যা হয়
+                    const failedOutput = {
+                        "api_status": "failed",
+                        "developer": "@RDXallhacknew",
+                        "message": "Unable to fetch data from the source API.",
+                        "error_details": error.message
+                    };
+                    outputElement.textContent = JSON.stringify(failedOutput, null, 4);
+                });
+        }
+    </script>
+</body>
+</html>
